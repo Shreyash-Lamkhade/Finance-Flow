@@ -1,0 +1,2663 @@
+Summary:
+ - Directory: d:\Finance Tracker
+ - Files processed: 11
+ - Total lines: 2559
+ - Duration: 0.20 seconds
+================================================================================
+Directory Structure:
+
+└── financeflow/
+    ├── assets/
+    ├── css/
+    │   └── style.css
+    ├── js/
+    │   ├── app.js
+    │   ├── budget.js
+    │   ├── charts.js
+    │   ├── storage.js
+    │   ├── transaction.js
+    │   ├── transactionClass.js
+    │   └── ui.js
+    ├── index.html
+    ├── INTERNSHIP_REPORT_CONTEXT.md
+    └── README.md
+
+Files extracted:
+financeflow\index.html (starts at line 1)
+financeflow\INTERNSHIP_REPORT_CONTEXT.md (starts at line 238)
+financeflow\README.md (starts at line 1022)
+financeflow\css\style.css (starts at line 1060)
+financeflow\js\app.js (starts at line 1682)
+financeflow\js\budget.js (starts at line 1863)
+financeflow\js\charts.js (starts at line 1933)
+financeflow\js\storage.js (starts at line 2091)
+financeflow\js\transaction.js (starts at line 2134)
+financeflow\js\transactionClass.js (starts at line 2290)
+financeflow\js\ui.js (starts at line 2341)
+
+================================================================================
+
+File: financeflow\index.html (starts at line 1)
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinanceFlow – Personal Finance Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <svg class="icon icon-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+          <rect x="2" y="5" width="20" height="14" rx="2"/>
+          <path d="M2 10h20"/>
+          <path d="M6 15h4"/>
+        </svg>
+        <div>
+          <h1>FinanceFlow</h1>
+          <p class="tagline">Your personal finance overview</p>
+        </div>
+      </div>
+      <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">
+        <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        </svg>
+        <svg class="icon icon-moon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Dashboard Stats -->
+    <section class="stats-grid" id="statsGrid">
+      <div class="stat-card" data-stat="balance">
+        <div class="stat-icon-wrap">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Total Balance</p>
+          <p class="stat-value" id="totalBalance">₹0</p>
+        </div>
+      </div>
+      <div class="stat-card income" data-stat="income">
+        <div class="stat-icon-wrap">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Total Income</p>
+          <p class="stat-value" id="totalIncome">₹0</p>
+        </div>
+      </div>
+      <div class="stat-card expense" data-stat="expense">
+        <div class="stat-icon-wrap">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M12 5v14M19 12l-7 7-7-7"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Total Expenses</p>
+          <p class="stat-value" id="totalExpenses">₹0</p>
+        </div>
+      </div>
+      <div class="stat-card savings" data-stat="savings">
+        <div class="stat-icon-wrap">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c-.2-1.5-1.5-3-3-3z"/>
+            <circle cx="15" cy="9" r="1"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Savings</p>
+          <p class="stat-value" id="totalSavings">₹0</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-grid">
+      <!-- Add Transaction Form -->
+      <section class="card form-card">
+        <div class="card-header">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          <h2>Add Transaction</h2>
+        </div>
+        <form id="transactionForm">
+          <input type="hidden" id="editId">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" placeholder="e.g. Monthly Salary">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="amount">Amount (₹)</label>
+              <input type="number" id="amount" placeholder="0" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <label for="date">Date</label>
+              <input type="date" id="date">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="category">Category</label>
+              <select id="category"></select>
+            </div>
+            <div class="form-group">
+              <label for="type">Type</label>
+              <select id="type">
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select>
+            </div>
+          </div>
+          <p class="error-msg" id="formError"></p>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Add Transaction</button>
+        </form>
+      </section>
+
+      <!-- Transaction List -->
+      <section class="card list-card">
+        <div class="list-header">
+          <div class="card-header">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+              <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+            </svg>
+            <h2>Transactions</h2>
+          </div>
+          <div class="list-controls">
+            <div class="search-wrap">
+              <svg class="icon icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+              <input type="search" id="searchInput" placeholder="Search transactions">
+            </div>
+            <select id="filterType">
+              <option value="all">All Types</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+            <select id="filterPeriod">
+              <option value="all">All Time</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+            </select>
+          </div>
+          <div class="date-range-controls">
+            <label for="dateFrom">From</label>
+            <input type="date" id="dateFrom" title="Start date">
+            <label for="dateTo">To</label>
+            <input type="date" id="dateTo" title="End date">
+          </div>
+        </div>
+        <ul id="transactionList" class="transaction-list"></ul>
+        <p id="emptyMsg" class="empty-msg">No transactions yet. Add your first one above.</p>
+      </section>
+
+      <!-- Analytics -->
+      <section class="card charts-card">
+        <div class="card-header">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M18 20V10M12 20V4M6 20v-6"/>
+          </svg>
+          <h2>Analytics</h2>
+        </div>
+        <div class="charts-grid">
+          <div class="chart-wrap">
+            <h3>Expenses by Category</h3>
+            <canvas id="pieChart"></canvas>
+          </div>
+          <div class="chart-wrap">
+            <h3>Income vs Expense</h3>
+            <canvas id="barChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Budget Limits -->
+      <section class="card budget-card">
+        <div class="card-header">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+          <h2>Budget Limits</h2>
+        </div>
+        <form id="budgetForm" class="budget-form">
+          <select id="budgetCategory"></select>
+          <div class="budget-input-wrap">
+            <span class="budget-currency">₹</span>
+            <input type="number" id="budgetAmount" placeholder="Set limit" min="1" step="0.01">
+          </div>
+          <button type="submit" class="btn btn-primary btn-sm">Set</button>
+        </form>
+        <div id="budgetList" class="budget-list"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>FinanceFlow &mdash; Built with HTML, CSS &amp; JavaScript</p>
+    </footer>
+  </div>
+
+  <!-- Delete Modal -->
+  <div id="deleteModal" class="modal hidden">
+    <div class="modal-content">
+      <svg class="icon icon-modal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+        <path d="M10 11v6M14 11v6"/>
+      </svg>
+      <h3>Delete Transaction?</h3>
+      <p>This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button id="cancelDelete" class="btn btn-secondary">Cancel</button>
+        <button id="confirmDelete" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
+
+
+
+================================================================================
+
+File: financeflow\INTERNSHIP_REPORT_CONTEXT.md (starts at line 238)
+
+# FinanceFlow – Internship Project Full Context Document
+# For use with Claude to generate Internship Report
+
+---
+
+## SECTION 1 — PROJECT OVERVIEW
+
+**Project Name:** FinanceFlow – Personal Finance Tracker
+**Course:** Cisco Networking Academy – JavaScript Essentials 1 & 2
+**Technology Stack:** HTML5, CSS3, Vanilla JavaScript (ES6 Modules)
+**Type:** Frontend Web Application (no backend, no framework)
+**Run Method:** Open index.html directly in browser. Uses Chart.js via CDN.
+
+**Purpose:**
+FinanceFlow is a personal finance dashboard that allows users to track income and expenses, visualize spending patterns through charts, set category-wise budget limits, and filter transactions by date range or time period. The project was built as a practical demonstration of all JavaScript Essentials 1 and 2 concepts taught in the Cisco Networking Academy curriculum.
+
+---
+
+## SECTION 2 — FOLDER STRUCTURE
+
+```
+financeflow/
+├── index.html                  # Main HTML file, application entry point
+├── css/
+│   └── style.css               # All styles, CSS variables, dark/light theme, responsive
+├── js/
+│   ├── app.js                  # Main entry point – wires all modules, event listeners
+│   ├── transactionClass.js     # ES6 Class definition for Transaction
+│   ├── transaction.js          # Business logic – CRUD, validation, filtering, stats
+│   ├── storage.js              # localStorage read/write with JSON and try-catch
+│   ├── ui.js                   # DOM manipulation, rendering, form handling
+│   ├── charts.js               # Chart.js integration (doughnut + bar charts)
+│   └── budget.js               # Budget limit management per category
+└── README.md
+```
+
+---
+
+## SECTION 3 — FEATURES LIST
+
+1. **Dashboard Stats** – Real-time cards showing Total Balance, Income, Expenses, Savings
+2. **Add / Edit / Delete Transactions** – Full CRUD with form validation and confirmation modal
+3. **Search & Filter** – Live search by title/category; filter by type (income/expense)
+4. **Period Filters** – Filter transactions for "This Week" or "This Month"
+5. **Date Range Filter** – Custom From/To date range picker
+6. **Analytics Charts** – Doughnut chart (expenses by category) + Tableau-style bar chart (income vs expense)
+7. **Budget Limits per Category** – Set monthly spending cap per category, visual progress bar (green/orange/red)
+8. **Dark / Light Theme Toggle** – Persisted in localStorage, affects charts too
+9. **localStorage Persistence** – All transactions, budgets, and theme survive page reload
+10. **Toast Notifications** – Non-blocking feedback messages for add/update/delete actions
+11. **Delete Confirmation Modal** – Prevents accidental deletion
+12. **Responsive Design** – Works on mobile, tablet, desktop
+
+---
+
+## SECTION 4 — JAVASCRIPT ESSENTIALS CONCEPTS DEMONSTRATED
+
+### From JS Essentials 1:
+| Concept | Where Used |
+|---|---|
+| Variables (let, const) | All files – `let transactions = []`, `const STORAGE_KEY` |
+| Data Types (string, number, boolean, null) | Transaction fields: title (string), amount (number), exceeded (boolean) |
+| Operators (arithmetic, comparison, logical) | `balance = income - expenses`, `spent > limit`, `percent >= 80` |
+| if / else / else if | `validateTransaction()`, `filterTransactions()`, budget color logic |
+| for loop | `getExpensesByCategory()` uses `for (let i = 0; ...)` |
+| for...in loop | `checkBudgets()` iterates over budget object keys |
+| Functions | All helper functions throughout every module |
+| Arrays | `transactions[]`, `CATEGORIES[]`, `alerts[]` |
+| Objects | `TYPES`, budget objects `{ category: limit }`, stats object |
+| String methods | `.trim()`, `.toLowerCase()`, `.includes()`, `.toFixed()`, `.padStart()` |
+| Template Literals | `renderTransactions()` HTML generation, `formatAmount()` |
+
+### From JS Essentials 2:
+| Concept | Where Used |
+|---|---|
+| Arrow Functions | All exported functions use arrow function syntax |
+| ES6 Classes | `Transaction` class with constructor, methods, static method |
+| Constructor | `new Transaction(title, amount, category, type, date, id)` |
+| Class Methods | `formatAmount()`, `toJSON()` |
+| Static Methods | `Transaction.fromJSON(obj)` |
+| Array.map() | `populateCategories()`, `setTransactions()`, saving data |
+| Array.filter() | `deleteTransaction()`, `filterTransactions()`, stats calculations |
+| Array.reduce() | `calculateStats()` – summing income and expenses |
+| Array.find() | `getTransactionById()` |
+| Array.findIndex() | `updateTransaction()` |
+| Array.sort() | Sort transactions by date; sort budget alerts |
+| Spread Operator | `let result = [...transactions]` in filterTransactions |
+| Destructuring | `const { id, title, amount, ... } = getFormData()` in app.js |
+| Default Parameters | `filterTransactions(search='', typeFilter='all', ...)` |
+| ES6 Modules (import/export) | All 6 JS files use `import`/`export` |
+| JSON | `JSON.stringify()` and `JSON.parse()` in storage.js |
+| localStorage | `localStorage.setItem()`, `getItem()` in storage.js and budget.js |
+| try / catch | Error handling in all localStorage operations |
+| Date Object | `new Date()`, `getDay()`, `getMonth()`, `setDate()`, date comparisons |
+| DOM Manipulation | `getElementById`, `createElement`, `innerHTML`, `appendChild` |
+| Event Listeners | `addEventListener` for form submit, input, change, click |
+| Form Validation | `validateTransaction()` – checks empty, zero amount, missing fields |
+
+---
+
+## SECTION 5 — MODULE-BY-MODULE EXPLANATION
+
+### 5.1 transactionClass.js
+Defines the `Transaction` ES6 class. This is the data model of the app.
+- **Constructor** takes title, amount, category, type, date, and optional id
+- `id` is auto-generated using `Date.now().toString()` if not provided
+- `formatAmount()` – instance method returning formatted currency string with +/- prefix
+- `toJSON()` – converts instance to plain object for JSON storage
+- `fromJSON()` – static method to recreate a Transaction from a stored plain object
+- Also exports `TYPES` object and `CATEGORIES` array as constants
+
+### 5.2 transaction.js
+Business logic layer. Maintains the `transactions` array in module scope.
+- `getTransactions()` / `setTransactions()` – getter and setter using map + fromJSON
+- `validateTransaction()` – input validation, returns error string or empty string
+- `addTransaction()` – validates then pushes new Transaction instance
+- `updateTransaction()` – validates, uses findIndex to replace in array
+- `deleteTransaction()` – uses filter to remove by id
+- `getTransactionById()` – uses find method
+- `filterTransactions()` – multi-filter: period (week/month), date range, type, search text, sorted by date
+- `calculateStats()` – uses filter + reduce to compute income, expenses, balance, savings
+- `getExpensesByCategory()` – uses for loop to group expenses into object
+
+### 5.3 storage.js
+Handles all localStorage operations with JSON serialization and try-catch error handling.
+- `saveTransactions()` / `loadTransactions()` – JSON.stringify / JSON.parse with error handling
+- `saveTheme()` / `loadTheme()` – stores user's dark/light preference
+
+### 5.4 budget.js
+Manages per-category spending limits stored separately in localStorage.
+- `loadBudgets()` / `saveBudgets()` – reads/writes `{ category: limit }` object
+- `setBudgetLimit()` – loads, updates one key, saves back
+- `removeBudgetLimit()` – uses `delete` operator on object key
+- `checkBudgets()` – iterates budgets with `for...in`, computes percent, builds alert array, sorts
+
+### 5.5 ui.js
+All DOM interaction. Reads from the DOM and writes to the DOM. No business logic.
+- `initElements()` – caches all DOM elements in the `els` object
+- `populateCategories()` – builds category `<option>` elements using map + template literals
+- `setDefaultDate()` – computes today's date and fills the date input
+- `updateStats()` – updates four stat card values
+- `renderTransactions()` – builds the `<li>` list using forEach + innerHTML template literals, attaches edit/delete listeners
+- `fillEditForm()` / `resetForm()` – form state management
+- `showToast()` / `showDeleteModal()` / `showFormError()` – UI feedback
+- `applyTheme()` – sets data-theme attribute on html element
+- `renderBudgets()` – builds progress bar HTML for each budget entry, attaches remove listeners
+
+### 5.6 charts.js
+Chart.js integration with Tableau 10 color palette.
+- `getChartTheme()` – reads current data-theme and returns matching colors
+- `updatePieChart()` – doughnut chart of expenses grouped by category
+- `updateBarChart()` – Tableau-style vertical bar chart with value labels drawn on canvas after animation, dashed grid lines, abbreviated tick labels
+- Both charts are destroyed and recreated on every update (Chart.js pattern)
+
+### 5.7 app.js
+Orchestrator / entry point. Imports all modules and connects them.
+- Declares module-level state: `deleteTargetId`, `currentTheme`
+- `refreshUI()` – called after every data change; reads all filter values, calls calculateStats, filterTransactions, renderTransactions, updateCharts, refreshBudgets, saveTransactions
+- `handleSubmit()` – decides add vs update based on hidden editId field
+- `handleEdit()` / `handleDeleteRequest()` / `handleConfirmDelete()` – CRUD event chain
+- `toggleTheme()` – switches theme, saves, re-renders charts
+- `handleBudgetSubmit()` – reads budget form, calls setBudgetLimit
+- `handlePeriodChange()` / `handleDateRangeChange()` – mutual exclusion between period and date range filters
+- `init()` – bootstraps everything on DOMContentLoaded
+
+---
+
+## SECTION 6 — FULL SOURCE CODE
+
+### index.html
+
+```html
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinanceFlow – Personal Finance Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="logo">
+        <h1>FinanceFlow</h1>
+        <p class="tagline">Your personal finance overview</p>
+      </div>
+      <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">...</button>
+    </header>
+
+    <section class="stats-grid">
+      <div class="stat-card" data-stat="balance">
+        <p class="stat-label">Total Balance</p><p class="stat-value" id="totalBalance">₹0</p>
+      </div>
+      <div class="stat-card income">
+        <p class="stat-label">Total Income</p><p class="stat-value" id="totalIncome">₹0</p>
+      </div>
+      <div class="stat-card expense">
+        <p class="stat-label">Total Expenses</p><p class="stat-value" id="totalExpenses">₹0</p>
+      </div>
+      <div class="stat-card savings">
+        <p class="stat-label">Savings</p><p class="stat-value" id="totalSavings">₹0</p>
+      </div>
+    </section>
+
+    <main class="main-grid">
+      <!-- Add Transaction Form -->
+      <section class="card form-card">
+        <h2>Add Transaction</h2>
+        <form id="transactionForm">
+          <input type="hidden" id="editId">
+          <input type="text" id="title" placeholder="e.g. Monthly Salary">
+          <input type="number" id="amount" placeholder="0" min="0" step="0.01">
+          <input type="date" id="date">
+          <select id="category"></select>
+          <select id="type">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+          <p class="error-msg" id="formError"></p>
+          <button type="submit" id="submitBtn">Add Transaction</button>
+        </form>
+      </section>
+
+      <!-- Transaction List with Filters -->
+      <section class="card list-card">
+        <h2>Transactions</h2>
+        <input type="search" id="searchInput" placeholder="Search transactions">
+        <select id="filterType">
+          <option value="all">All Types</option>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+        <select id="filterPeriod">
+          <option value="all">All Time</option>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+        </select>
+        <div class="date-range-controls">
+          <label for="dateFrom">From</label>
+          <input type="date" id="dateFrom">
+          <label for="dateTo">To</label>
+          <input type="date" id="dateTo">
+        </div>
+        <ul id="transactionList"></ul>
+        <p id="emptyMsg">No transactions yet.</p>
+      </section>
+
+      <!-- Analytics Charts -->
+      <section class="card charts-card">
+        <h2>Analytics</h2>
+        <canvas id="pieChart"></canvas>
+        <canvas id="barChart"></canvas>
+      </section>
+
+      <!-- Budget Limits -->
+      <section class="card budget-card">
+        <h2>Budget Limits</h2>
+        <form id="budgetForm">
+          <select id="budgetCategory"></select>
+          <input type="number" id="budgetAmount" placeholder="Set limit">
+          <button type="submit">Set</button>
+        </form>
+        <div id="budgetList"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Delete Modal -->
+  <div id="deleteModal" class="modal hidden">
+    <h3>Delete Transaction?</h3>
+    <button id="cancelDelete">Cancel</button>
+    <button id="confirmDelete">Delete</button>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
+```
+
+---
+
+### transactionClass.js
+
+```javascript
+/**
+ * transactionClass.js
+ * ES6 Class demonstrating: Classes, Constructors, Methods, Objects
+ */
+
+export const TYPES = { INCOME: 'income', EXPENSE: 'expense' };
+
+export const CATEGORIES = [
+  'Salary', 'Freelance', 'Food', 'Shopping', 'Travel',
+  'Bills', 'Entertainment', 'Health', 'Education', 'Other'
+];
+
+export class Transaction {
+  constructor(title, amount, category, type, date, id = null) {
+    this.id = id || Date.now().toString();
+    this.title = title;
+    this.amount = parseFloat(amount);
+    this.category = category;
+    this.type = type;
+    this.date = date;
+  }
+
+  formatAmount() {
+    const prefix = this.type === TYPES.INCOME ? '+' : '-';
+    return `${prefix}₹${this.amount.toFixed(2)}`;
+  }
+
+  toJSON() {
+    return { id: this.id, title: this.title, amount: this.amount,
+             category: this.category, type: this.type, date: this.date };
+  }
+
+  static fromJSON(obj) {
+    return new Transaction(obj.title, obj.amount, obj.category, obj.type, obj.date, obj.id);
+  }
+}
+```
+
+---
+
+### transaction.js
+
+```javascript
+/**
+ * transaction.js
+ * Business logic: validation, CRUD, filtering, stats
+ * Demonstrates: Functions, Arrow Functions, Arrays, if-else, Array Methods, Date Object
+ */
+
+import { Transaction, TYPES, CATEGORIES } from './transactionClass.js';
+
+let transactions = [];
+
+export const getTransactions = () => transactions;
+
+export const setTransactions = (data) => {
+  transactions = data.map(obj => Transaction.fromJSON(obj));
+};
+
+export const validateTransaction = (title, amount, category, type, date) => {
+  if (!title || title.trim() === '') return 'Title is required.';
+  if (!amount || parseFloat(amount) <= 0) return 'Amount must be greater than zero.';
+  if (!category) return 'Please select a category.';
+  if (!type) return 'Please select a type.';
+  if (!date) return 'Date is required.';
+  return '';
+};
+
+export const addTransaction = (title, amount, category, type, date) => {
+  const error = validateTransaction(title, amount, category, type, date);
+  if (error) return { success: false, error };
+  const tx = new Transaction(title, amount, category, type, date);
+  transactions.push(tx);
+  return { success: true, transaction: tx };
+};
+
+export const updateTransaction = (id, title, amount, category, type, date) => {
+  const error = validateTransaction(title, amount, category, type, date);
+  if (error) return { success: false, error };
+  const index = transactions.findIndex(tx => tx.id === id);
+  if (index === -1) return { success: false, error: 'Transaction not found.' };
+  transactions[index] = new Transaction(title, amount, category, type, date, id);
+  return { success: true };
+};
+
+export const deleteTransaction = (id) => {
+  transactions = transactions.filter(tx => tx.id !== id);
+};
+
+export const getTransactionById = (id) => transactions.find(tx => tx.id === id);
+
+const getWeekStart = () => {
+  const now = new Date();
+  const day = now.getDay();
+  const diff = (day === 0 ? -6 : 1 - day);
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + diff);
+  monday.setHours(0, 0, 0, 0);
+  return monday;
+};
+
+const getMonthStart = () => {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), 1);
+};
+
+export const filterTransactions = (search = '', typeFilter = 'all', dateFrom = '', dateTo = '', period = 'all') => {
+  let result = [...transactions];
+
+  if (period === 'week') {
+    const weekStart = getWeekStart();
+    result = result.filter(tx => new Date(tx.date) >= weekStart);
+  } else if (period === 'month') {
+    const monthStart = getMonthStart();
+    result = result.filter(tx => new Date(tx.date) >= monthStart);
+  }
+
+  if (dateFrom) {
+    const from = new Date(dateFrom);
+    result = result.filter(tx => new Date(tx.date) >= from);
+  }
+  if (dateTo) {
+    const to = new Date(dateTo);
+    result = result.filter(tx => new Date(tx.date) <= to);
+  }
+
+  if (typeFilter === TYPES.INCOME) {
+    result = result.filter(tx => tx.type === TYPES.INCOME);
+  } else if (typeFilter === TYPES.EXPENSE) {
+    result = result.filter(tx => tx.type === TYPES.EXPENSE);
+  }
+
+  if (search.trim()) {
+    const term = search.toLowerCase();
+    result = result.filter(tx =>
+      tx.title.toLowerCase().includes(term) ||
+      tx.category.toLowerCase().includes(term)
+    );
+  }
+
+  result.sort((a, b) => new Date(b.date) - new Date(a.date));
+  return result;
+};
+
+export const calculateStats = () => {
+  const income = transactions
+    .filter(tx => tx.type === TYPES.INCOME)
+    .reduce((sum, tx) => sum + tx.amount, 0);
+  const expenses = transactions
+    .filter(tx => tx.type === TYPES.EXPENSE)
+    .reduce((sum, tx) => sum + tx.amount, 0);
+  const balance = income - expenses;
+  const savings = balance > 0 ? balance : 0;
+  return { income, expenses, balance, savings };
+};
+
+export const getExpensesByCategory = () => {
+  const expenseTxs = transactions.filter(tx => tx.type === TYPES.EXPENSE);
+  const grouped = {};
+  for (let i = 0; i < expenseTxs.length; i++) {
+    const cat = expenseTxs[i].category;
+    grouped[cat] = (grouped[cat] || 0) + expenseTxs[i].amount;
+  }
+  return grouped;
+};
+
+export { CATEGORIES, TYPES };
+```
+
+---
+
+### storage.js
+
+```javascript
+/**
+ * storage.js
+ * Demonstrates: JSON, Local Storage, try-catch, Error Handling
+ */
+
+const STORAGE_KEY = 'financeflow_transactions';
+const THEME_KEY = 'financeflow_theme';
+
+export const saveTransactions = (transactions) => {
+  try {
+    const jsonData = JSON.stringify(transactions);
+    localStorage.setItem(STORAGE_KEY, jsonData);
+    return true;
+  } catch (error) {
+    console.error('Failed to save:', error.message);
+    return false;
+  }
+};
+
+export const loadTransactions = () => {
+  try {
+    const jsonData = localStorage.getItem(STORAGE_KEY);
+    if (!jsonData) return [];
+    return JSON.parse(jsonData);
+  } catch (error) {
+    console.error('Failed to load:', error.message);
+    return [];
+  }
+};
+
+export const saveTheme = (theme) => localStorage.setItem(THEME_KEY, theme);
+export const loadTheme = () => localStorage.getItem(THEME_KEY) || 'light';
+```
+
+---
+
+### budget.js
+
+```javascript
+/**
+ * budget.js
+ * Demonstrates: Objects, localStorage, for...in loops, comparison operators
+ */
+
+const BUDGET_KEY = 'financeflow_budgets';
+
+export const loadBudgets = () => {
+  try {
+    const raw = localStorage.getItem(BUDGET_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) { return {}; }
+};
+
+export const saveBudgets = (budgets) => {
+  try {
+    localStorage.setItem(BUDGET_KEY, JSON.stringify(budgets));
+  } catch (e) { console.error('Failed to save budgets:', e.message); }
+};
+
+export const setBudgetLimit = (category, limit) => {
+  const budgets = loadBudgets();
+  budgets[category] = parseFloat(limit);
+  saveBudgets(budgets);
+};
+
+export const removeBudgetLimit = (category) => {
+  const budgets = loadBudgets();
+  delete budgets[category];
+  saveBudgets(budgets);
+};
+
+export const checkBudgets = (expensesByCategory) => {
+  const budgets = loadBudgets();
+  const alerts = [];
+
+  for (const category in budgets) {
+    const limit = budgets[category];
+    const spent = expensesByCategory[category] || 0;
+    const percent = limit > 0 ? Math.round((spent / limit) * 100) : 0;
+    const exceeded = spent > limit;
+    alerts.push({ category, spent, limit, percent, exceeded });
+  }
+
+  alerts.sort((a, b) => {
+    if (a.exceeded && !b.exceeded) return -1;
+    if (!a.exceeded && b.exceeded) return 1;
+    return b.percent - a.percent;
+  });
+
+  return alerts;
+};
+```
+
+---
+
+### app.js
+
+```javascript
+/**
+ * app.js – Main entry point (ES6 Module)
+ * Demonstrates: ES6 Modules, Event Listeners, Variables, Operators
+ */
+
+import {
+  getTransactions, setTransactions, addTransaction, updateTransaction,
+  deleteTransaction, getTransactionById, filterTransactions,
+  calculateStats, getExpensesByCategory
+} from './transaction.js';
+import { saveTransactions, loadTransactions, saveTheme, loadTheme } from './storage.js';
+import {
+  initElements, populateCategories, setDefaultDate, updateStats,
+  renderTransactions, fillEditForm, resetForm, showFormError,
+  showDeleteModal, showToast, applyTheme, getFormData, els, renderBudgets
+} from './ui.js';
+import { updateCharts } from './charts.js';
+import { loadBudgets, setBudgetLimit, removeBudgetLimit, checkBudgets } from './budget.js';
+
+let deleteTargetId = null;
+let currentTheme = 'light';
+
+const refreshBudgets = () => {
+  const categoryData = getExpensesByCategory();
+  const budgets = loadBudgets();
+  const alerts = checkBudgets(categoryData);
+  renderBudgets(alerts, budgets, (cat) => {
+    removeBudgetLimit(cat);
+    refreshBudgets();
+  });
+};
+
+const refreshUI = () => {
+  const stats = calculateStats();
+  updateStats(stats);
+  const search = els.searchInput.value;
+  const filter = els.filterType.value;
+  const period = els.filterPeriod.value;
+  const dateFrom = els.dateFrom.value;
+  const dateTo = els.dateTo.value;
+  const filtered = filterTransactions(search, filter, dateFrom, dateTo, period);
+  renderTransactions(filtered, handleEdit, handleDeleteRequest);
+  const categoryData = getExpensesByCategory();
+  updateCharts(stats, categoryData);
+  refreshBudgets();
+  const data = getTransactions().map(tx => tx.toJSON());
+  saveTransactions(data);
+};
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const { id, title, amount, category, type, date } = getFormData();
+  let result;
+  if (id) {
+    result = updateTransaction(id, title, amount, category, type, date);
+    if (result.success) showToast('Transaction updated!');
+  } else {
+    result = addTransaction(title, amount, category, type, date);
+    if (result.success) showToast('Transaction added!');
+  }
+  if (!result.success) { showFormError(result.error); return; }
+  resetForm();
+  refreshUI();
+};
+
+const handleEdit = (id) => {
+  const tx = getTransactionById(id);
+  if (tx) fillEditForm(tx);
+};
+
+const handleDeleteRequest = (id) => {
+  deleteTargetId = id;
+  showDeleteModal(true);
+};
+
+const handleConfirmDelete = () => {
+  if (deleteTargetId) {
+    deleteTransaction(deleteTargetId);
+    deleteTargetId = null;
+    showDeleteModal(false);
+    showToast('Transaction deleted!');
+    refreshUI();
+  }
+};
+
+const toggleTheme = () => {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  applyTheme(currentTheme);
+  saveTheme(currentTheme);
+  refreshUI();
+};
+
+const handleBudgetSubmit = (e) => {
+  e.preventDefault();
+  const cat = els.budgetCategory.value;
+  const amt = parseFloat(els.budgetAmount.value);
+  if (!cat || isNaN(amt) || amt <= 0) return;
+  setBudgetLimit(cat, amt);
+  els.budgetAmount.value = '';
+  showToast(`Budget set for ${cat}!`);
+  refreshBudgets();
+};
+
+const handlePeriodChange = () => {
+  if (els.filterPeriod.value !== 'all') {
+    els.dateFrom.value = '';
+    els.dateTo.value = '';
+  }
+  refreshUI();
+};
+
+const handleDateRangeChange = () => {
+  els.filterPeriod.value = 'all';
+  refreshUI();
+};
+
+const init = () => {
+  initElements();
+  populateCategories();
+  setDefaultDate();
+  const saved = loadTransactions();
+  setTransactions(saved);
+  currentTheme = loadTheme();
+  applyTheme(currentTheme);
+  els.form.addEventListener('submit', handleSubmit);
+  els.searchInput.addEventListener('input', refreshUI);
+  els.filterType.addEventListener('change', refreshUI);
+  els.filterPeriod.addEventListener('change', handlePeriodChange);
+  els.dateFrom.addEventListener('change', handleDateRangeChange);
+  els.dateTo.addEventListener('change', handleDateRangeChange);
+  els.confirmDelete.addEventListener('click', handleConfirmDelete);
+  els.cancelDelete.addEventListener('click', () => showDeleteModal(false));
+  els.themeToggle.addEventListener('click', toggleTheme);
+  if (els.budgetForm) els.budgetForm.addEventListener('submit', handleBudgetSubmit);
+  refreshUI();
+};
+
+document.addEventListener('DOMContentLoaded', init);
+```
+
+---
+
+## SECTION 7 — DATA FLOW DIAGRAM (Text)
+
+```
+User Action (form submit / button click / filter change)
+        |
+        v
+   app.js (Event Handler)
+        |
+        v
+  transaction.js (Business Logic – validate, CRUD, filter, stats)
+        |
+        +---> transactionClass.js (Transaction class instances)
+        |
+        v
+   storage.js (localStorage save/load with JSON)
+        |
+        v
+   budget.js (Budget limits check – for...in, objects)
+        |
+        v
+    ui.js (DOM render – update stats, list, budget bars)
+        |
+        v
+   charts.js (Chart.js update – pie + bar charts)
+```
+
+---
+
+## SECTION 8 — KEY LEARNING OUTCOMES
+
+1. **Modular Code Design** – Separated concerns into 7 files, each with a single responsibility. Learned how ES6 import/export keeps code organized and reusable.
+
+2. **Object-Oriented Programming** – Designed the `Transaction` class with a constructor, instance methods, and a static factory method. Each transaction in the app is an actual object instance.
+
+3. **Functional Array Methods** – Used `.map()`, `.filter()`, `.reduce()`, `.find()`, `.findIndex()`, and `.sort()` extensively instead of manual loops to write cleaner, more readable code.
+
+4. **Data Persistence** – Learned to serialize JavaScript objects to JSON strings for localStorage storage and deserialize them back into class instances on load, with error handling using try-catch.
+
+5. **DOM Manipulation** – Built a fully dynamic UI without any framework. All HTML for the transaction list and budget bars is generated with JavaScript using template literals and `innerHTML`.
+
+6. **Event-Driven Architecture** – The entire app responds to user events. Learned how to attach event listeners, read form data, prevent default behavior, and propagate changes through the UI.
+
+7. **Date Handling** – Used the JavaScript Date object to implement weekly and monthly filters, computing the Monday of the current ISO week and the first day of the current month dynamically.
+
+8. **Separation of Logic and UI** – `transaction.js` never touches the DOM; `ui.js` never modifies the data array. This clean separation made debugging significantly easier.
+
+---
+
+## SECTION 9 — TECHNOLOGIES USED
+
+| Technology | Purpose |
+|---|---|
+| HTML5 | Semantic structure, forms, accessibility attributes |
+| CSS3 | CSS Custom Properties (variables), Grid, Flexbox, media queries, transitions |
+| Vanilla JavaScript ES6+ | All application logic, no frameworks |
+| Chart.js (CDN) | Doughnut and bar chart rendering |
+| Google Fonts | Inter + Plus Jakarta Sans typography |
+| localStorage API | Client-side data persistence |
+| ES6 Modules | Code organization via import/export |
+
+---
+
+## SECTION 10 — PROMPT FOR CLAUDE
+
+Use all the content in this document to write a complete internship report for a B.Tech student who completed the Cisco Networking Academy JavaScript Essentials 1 & 2 course and built FinanceFlow as their project. The report should include:
+
+1. Title Page details
+2. Abstract / Executive Summary
+3. Introduction to the internship and course
+4. JavaScript Essentials 1 concepts learned (with examples from the project)
+5. JavaScript Essentials 2 concepts learned (with examples from the project)
+6. Project description – FinanceFlow
+7. System design / architecture
+8. Module-wise explanation
+9. Features implemented
+10. Challenges faced and solutions
+11. Learning outcomes
+12. Conclusion
+13. References
+
+Write in formal academic report style. Use the actual code snippets from this document as examples where relevant.
+
+
+
+================================================================================
+
+File: financeflow\README.md (starts at line 1022)
+
+# FinanceFlow – Personal Finance Tracker
+
+A modern personal finance dashboard built with **HTML5, CSS3, and Vanilla JavaScript** for Cisco Networking Academy JavaScript Essentials 1 & 2.
+
+## Features
+- Dashboard with Balance, Income, Expenses, Savings
+- Add / Edit / Delete transactions
+- Search & filter transactions
+- Chart.js analytics (Pie + Bar charts)
+- Local Storage persistence
+- Dark/Light mode toggle
+- Responsive glassmorphism UI
+
+## How to Run
+1. Open `index.html` in any modern browser (Chrome recommended)
+2. No server or installation needed — uses Chart.js CDN
+
+## Folder Structure
+```
+financeflow/
+├── index.html
+├── css/style.css
+├── js/
+│   ├── app.js            # Main entry, event handlers
+│   ├── transactionClass.js # ES6 Class
+│   ├── transaction.js    # Business logic
+│   ├── storage.js        # Local Storage + JSON
+│   ├── ui.js             # DOM manipulation
+│   └── charts.js         # Chart.js integration
+└── README.md
+```
+
+## JavaScript Concepts Demonstrated
+Variables, Constants, Data Types, Operators, Functions, Arrow Functions, Arrays, Objects, Classes, Constructors, Methods, Loops, if-else, Template Literals, map/filter/reduce/find, DOM Manipulation, Event Listeners, Form Validation, JSON, Local Storage, Date Object, ES6 Modules, try-catch
+
+## Author
+TY B.Tech – Internship Project
+
+
+
+================================================================================
+
+File: financeflow\css\style.css (starts at line 1060)
+
+/* ===== Design Tokens ===== */
+:root {
+  --bg: #F4F7FB;
+  --bg-accent: #E8F1FA;
+  --surface: #FFFFFF;
+  --surface-hover: #F9FBFD;
+  --border: #E2E8F0;
+  --border-light: #EDF2F7;
+
+  --text: #1A1D21;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+
+  --blue: #4A90D9;
+  --blue-light: #EBF4FD;
+  --blue-dark: #2E6BAD;
+
+  --income: #59A14F;
+  --income-bg: #EDF7EC;
+  --expense: #E15759;
+  --expense-bg: #FDEDED;
+  --savings: #4E79A7;
+  --savings-bg: #EBF0F7;
+
+  --shadow-sm: 0 1px 3px rgba(26, 29, 33, 0.06);
+  --shadow-md: 0 4px 16px rgba(26, 29, 33, 0.08);
+  --shadow-lg: 0 8px 30px rgba(26, 29, 33, 0.1);
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', 'Inter', sans-serif;
+}
+
+[data-theme="dark"] {
+  --bg: #0F1419;
+  --bg-accent: #1A2332;
+  --surface: #1C2430;
+  --surface-hover: #243040;
+  --border: #2D3748;
+  --border-light: #252F3D;
+
+  --text: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+
+  --blue-light: #1E3050;
+  --income-bg: #1A2E1A;
+  --expense-bg: #2E1A1A;
+  --savings-bg: #1A2535;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  min-height: 100vh;
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s, color 0.3s;
+}
+
+.app {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+}
+
+/* ===== Icons ===== */
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon-logo { width: 28px; height: 28px; color: var(--blue); }
+.icon-search { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--text-muted); pointer-events: none; }
+.icon-modal { width: 32px; height: 32px; color: var(--expense); margin: 0 auto 1rem; display: block; }
+.hidden { display: none !important; }
+
+/* ===== Header ===== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo { display: flex; align-items: center; gap: 0.875rem; }
+
+.logo h1 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.tagline {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin-top: 0.125rem;
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text);
+  transition: background 0.2s, border-color 0.2s;
+}
+.theme-btn:hover { background: var(--surface-hover); border-color: var(--blue); }
+.theme-btn .icon { width: 18px; height: 18px; }
+
+[data-theme="light"] .icon-sun { display: none; }
+[data-theme="light"] .icon-moon { display: block !important; }
+[data-theme="dark"] .icon-sun { display: block; }
+[data-theme="dark"] .icon-moon { display: none !important; }
+
+/* ===== Stats Grid ===== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.stat-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.25s, transform 0.25s;
+  animation: fadeInUp 0.4s ease forwards;
+}
+.stat-card:nth-child(2) { animation-delay: 0.06s; }
+.stat-card:nth-child(3) { animation-delay: 0.12s; }
+.stat-card:nth-child(4) { animation-delay: 0.18s; }
+
+.stat-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.stat-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  background: var(--blue-light);
+  color: var(--blue);
+}
+.stat-card.income .stat-icon-wrap { background: var(--income-bg); color: var(--income); }
+.stat-card.expense .stat-icon-wrap { background: var(--expense-bg); color: var(--expense); }
+.stat-card.savings .stat-icon-wrap { background: var(--savings-bg); color: var(--savings); }
+
+.stat-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stat-value {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.stat-card.income .stat-value { color: var(--income); }
+.stat-card.expense .stat-value { color: var(--expense); }
+.stat-card.savings .stat-value { color: var(--savings); }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Cards ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.25s;
+}
+.card:hover { box-shadow: var(--shadow-md); }
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--text);
+}
+.card-header .icon { color: var(--blue); }
+.card-header h2 {
+  font-family: var(--font-heading);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ===== Main Grid ===== */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.form-card, .list-card { padding: 1.5rem; }
+.charts-card { grid-column: 1 / -1; padding: 1.5rem; }
+.budget-card { grid-column: 1 / -1; padding: 1.5rem; }
+
+h3 {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+/* ===== Form ===== */
+.form-group { margin-bottom: 1rem; flex: 1; }
+.form-row { display: flex; gap: 1rem; }
+
+label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  margin-bottom: 0.375rem;
+  color: var(--text-secondary);
+}
+
+input, select {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+input:focus, select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.15);
+}
+input::placeholder { color: var(--text-muted); }
+
+.error-msg {
+  color: var(--expense);
+  font-size: 0.8125rem;
+  min-height: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+}
+.btn:hover { opacity: 0.9; }
+
+.btn-primary {
+  background: var(--blue);
+  color: #fff;
+  width: 100%;
+}
+.btn-primary:hover { background: var(--blue-dark); opacity: 1; }
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--surface-hover); opacity: 1; }
+
+.btn-danger { background: var(--expense); color: #fff; }
+.btn-danger:hover { opacity: 0.85; }
+
+.btn-icon {
+  padding: 0.4rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+.btn-icon:hover { background: var(--surface-hover); color: var(--text); border-color: var(--text-muted); }
+.btn-icon.btn-danger-icon:hover { background: var(--expense-bg); color: var(--expense); border-color: var(--expense); }
+
+.btn-sm { padding: 0.35rem 0.65rem; font-size: 0.8125rem; }
+
+/* ===== Transaction List ===== */
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+.list-header .card-header { margin-bottom: 0; }
+
+.list-controls { display: flex; gap: 0.5rem; align-items: center; }
+.list-controls select { width: auto; min-width: 110px; }
+
+.search-wrap { position: relative; }
+.search-wrap input {
+  padding-left: 2.25rem;
+  min-width: 200px;
+}
+
+.transaction-list { list-style: none; max-height: 380px; overflow-y: auto; }
+
+.transaction-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 0.5rem;
+  border-bottom: 1px solid var(--border-light);
+  transition: background 0.15s;
+}
+.transaction-list li:hover { background: var(--surface-hover); }
+.transaction-list li:last-child { border-bottom: none; }
+
+.tx-type-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.tx-type-dot.income { background: var(--income); }
+.tx-type-dot.expense { background: var(--expense); }
+
+.tx-info { flex: 1; min-width: 0; }
+.tx-title { font-weight: 600; font-size: 0.9375rem; color: var(--text); }
+.tx-meta { font-size: 0.8125rem; color: var(--text-muted); margin-top: 0.125rem; }
+
+.tx-amount {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+}
+.tx-amount.income { color: var(--income); }
+.tx-amount.expense { color: var(--expense); }
+
+.tx-actions { display: flex; gap: 0.25rem; }
+
+.empty-msg {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 2.5rem 1rem;
+  font-size: 0.9375rem;
+}
+
+/* ===== Charts ===== */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.chart-wrap {
+  background: var(--bg-accent);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+  position: relative;
+  height: 300px;
+}
+
+/* ===== Modal ===== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 20, 25, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(2px);
+}
+.modal.hidden { display: none; }
+
+.modal-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  text-align: center;
+  max-width: 380px;
+  width: 90%;
+  box-shadow: var(--shadow-lg);
+}
+.modal-content h3 {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+.modal-content p { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9375rem; }
+.modal-actions { display: flex; gap: 0.75rem; justify-content: center; }
+
+/* ===== Toast ===== */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: var(--text);
+  color: var(--surface);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  z-index: 200;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.toast.hidden { opacity: 0; transform: translateY(12px); pointer-events: none; }
+
+[data-theme="dark"] .toast {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+/* ===== Footer ===== */
+.footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+.footer p { font-size: 0.8125rem; color: var(--text-muted); }
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .app { padding: 1.25rem 1rem 2rem; }
+  .main-grid { grid-template-columns: 1fr; }
+  .charts-grid { grid-template-columns: 1fr; }
+  .form-row { flex-direction: column; }
+  .list-header { flex-direction: column; }
+  .list-controls { width: 100%; flex-direction: column; }
+  .search-wrap, .search-wrap input { width: 100%; }
+  .list-controls select { width: 100%; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .date-range-controls { flex-direction: column; }
+  .date-range-controls input { width: 100%; }
+  .budget-form { flex-direction: column; }
+  .budget-input-wrap { width: 100%; }
+  .budget-input-wrap input { width: 100%; }
+}
+
+/* ===== Date Range Controls ===== */
+.date-range-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.date-range-controls label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.date-range-controls input {
+  width: auto;
+  min-width: 140px;
+  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+}
+
+/* ===== Budget Panel ===== */
+.budget-form {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.budget-form select { width: auto; min-width: 140px; }
+
+.budget-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.budget-currency {
+  position: absolute;
+  left: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  pointer-events: none;
+}
+
+.budget-input-wrap input {
+  padding-left: 1.75rem;
+  min-width: 130px;
+  width: auto;
+}
+
+.budget-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.budget-item {
+  background: var(--bg-accent);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 0.875rem 1rem;
+  transition: border-color 0.2s;
+}
+
+.budget-item--exceeded {
+  border-color: var(--expense);
+  background: var(--expense-bg);
+}
+
+.budget-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.budget-cat {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--text);
+}
+
+.budget-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.budget-exceeded {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--expense);
+}
+
+.budget-ok {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--income);
+}
+
+.budget-bar-track {
+  width: 100%;
+  height: 7px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 0.375rem;
+}
+
+.budget-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.budget-amounts {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+
+
+================================================================================
+
+File: financeflow\js\app.js (starts at line 1682)
+
+/**
+ * app.js – Main entry point (ES6 Module)
+ * Connects all modules, handles events, orchestrates the app
+ * Demonstrates: ES6 Modules, Event Listeners, Variables, Operators
+ */
+
+import {
+  getTransactions, setTransactions, addTransaction, updateTransaction,
+  deleteTransaction, getTransactionById, filterTransactions,
+  calculateStats, getExpensesByCategory
+} from './transaction.js';
+import { saveTransactions, loadTransactions, saveTheme, loadTheme } from './storage.js';
+import {
+  initElements, populateCategories, setDefaultDate, updateStats,
+  renderTransactions, fillEditForm, resetForm, showFormError,
+  showDeleteModal, showToast, applyTheme, getFormData, els,
+  renderBudgets
+} from './ui.js';
+import { updateCharts } from './charts.js';
+import {
+  loadBudgets, setBudgetLimit, removeBudgetLimit, checkBudgets
+} from './budget.js';
+
+let deleteTargetId = null; // Variable to track which transaction to delete
+let currentTheme = 'light'; // Variable for theme state
+
+/** Refresh budget panel */
+const refreshBudgets = () => {
+  const categoryData = getExpensesByCategory();
+  const budgets = loadBudgets();
+  const alerts = checkBudgets(categoryData);
+  renderBudgets(alerts, budgets, (cat) => {
+    removeBudgetLimit(cat);
+    refreshBudgets();
+  });
+};
+
+/** Refresh entire UI from current data */
+const refreshUI = () => {
+  const stats = calculateStats();
+  updateStats(stats);
+
+  // Read all active filters
+  const search = els.searchInput.value;
+  const filter = els.filterType.value;
+  const period = els.filterPeriod.value;
+  const dateFrom = els.dateFrom.value;
+  const dateTo = els.dateTo.value;
+
+  const filtered = filterTransactions(search, filter, dateFrom, dateTo, period);
+  renderTransactions(filtered, handleEdit, handleDeleteRequest);
+
+  const categoryData = getExpensesByCategory();
+  updateCharts(stats, categoryData);
+
+  refreshBudgets();
+
+  // Save to localStorage
+  const data = getTransactions().map(tx => tx.toJSON());
+  saveTransactions(data);
+};
+
+/** Handle form submit (add or update) */
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const { id, title, amount, category, type, date } = getFormData();
+
+  let result;
+  if (id) {
+    result = updateTransaction(id, title, amount, category, type, date);
+    if (result.success) showToast('Transaction updated!');
+  } else {
+    result = addTransaction(title, amount, category, type, date);
+    if (result.success) showToast('Transaction added!');
+  }
+
+  if (!result.success) {
+    showFormError(result.error);
+    return;
+  }
+
+  resetForm();
+  refreshUI();
+};
+
+/** Handle edit button click */
+const handleEdit = (id) => {
+  const tx = getTransactionById(id);
+  if (tx) fillEditForm(tx);
+};
+
+/** Show delete confirmation */
+const handleDeleteRequest = (id) => {
+  deleteTargetId = id;
+  showDeleteModal(true);
+};
+
+/** Confirm delete */
+const handleConfirmDelete = () => {
+  if (deleteTargetId) {
+    deleteTransaction(deleteTargetId);
+    deleteTargetId = null;
+    showDeleteModal(false);
+    showToast('Transaction deleted!');
+    refreshUI();
+  }
+};
+
+/** Toggle theme */
+const toggleTheme = () => {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  applyTheme(currentTheme);
+  saveTheme(currentTheme);
+  refreshUI();
+};
+
+/** Handle budget form submit */
+const handleBudgetSubmit = (e) => {
+  e.preventDefault();
+  const cat = els.budgetCategory.value;
+  const amt = parseFloat(els.budgetAmount.value);
+  if (!cat || isNaN(amt) || amt <= 0) return;
+  setBudgetLimit(cat, amt);
+  els.budgetAmount.value = '';
+  showToast(`Budget set for ${cat}!`);
+  refreshBudgets();
+};
+
+/** When period filter changes, clear date range inputs (they conflict) */
+const handlePeriodChange = () => {
+  if (els.filterPeriod.value !== 'all') {
+    els.dateFrom.value = '';
+    els.dateTo.value = '';
+  }
+  refreshUI();
+};
+
+/** When date range changes, reset period filter */
+const handleDateRangeChange = () => {
+  els.filterPeriod.value = 'all';
+  refreshUI();
+};
+
+/** Initialize the application */
+const init = () => {
+  initElements();
+  populateCategories();
+  setDefaultDate();
+
+  // Load saved data
+  const saved = loadTransactions();
+  setTransactions(saved);
+
+  // Load theme
+  currentTheme = loadTheme();
+  applyTheme(currentTheme);
+
+  // Transaction form events
+  els.form.addEventListener('submit', handleSubmit);
+  els.searchInput.addEventListener('input', refreshUI);
+  els.filterType.addEventListener('change', refreshUI);
+  els.filterPeriod.addEventListener('change', handlePeriodChange);
+  els.dateFrom.addEventListener('change', handleDateRangeChange);
+  els.dateTo.addEventListener('change', handleDateRangeChange);
+
+  // Delete modal events
+  els.confirmDelete.addEventListener('click', handleConfirmDelete);
+  els.cancelDelete.addEventListener('click', () => showDeleteModal(false));
+
+  // Theme toggle
+  els.themeToggle.addEventListener('click', toggleTheme);
+
+  // Budget form
+  if (els.budgetForm) els.budgetForm.addEventListener('submit', handleBudgetSubmit);
+
+  refreshUI();
+};
+
+// Start app when DOM is ready
+document.addEventListener('DOMContentLoaded', init);
+
+
+
+================================================================================
+
+File: financeflow\js\budget.js (starts at line 1863)
+
+/**
+ * budget.js
+ * Budget limit management per category
+ * Demonstrates: Objects, localStorage, for...in loops, comparison operators
+ */
+
+const BUDGET_KEY = 'financeflow_budgets';
+
+/** Load budgets from localStorage – returns plain object { category: limit } */
+export const loadBudgets = () => {
+  try {
+    const raw = localStorage.getItem(BUDGET_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    console.error('Failed to load budgets:', e.message);
+    return {};
+  }
+};
+
+/** Save budgets object to localStorage */
+export const saveBudgets = (budgets) => {
+  try {
+    localStorage.setItem(BUDGET_KEY, JSON.stringify(budgets));
+  } catch (e) {
+    console.error('Failed to save budgets:', e.message);
+  }
+};
+
+/** Set a budget limit for a category */
+export const setBudgetLimit = (category, limit) => {
+  const budgets = loadBudgets();
+  budgets[category] = parseFloat(limit);
+  saveBudgets(budgets);
+};
+
+/** Remove budget limit for a category */
+export const removeBudgetLimit = (category) => {
+  const budgets = loadBudgets();
+  delete budgets[category];
+  saveBudgets(budgets);
+};
+
+/**
+ * Check all categories against their budgets.
+ * Returns array of { category, spent, limit, percent, exceeded }
+ * Demonstrates: for...in loop, objects, arithmetic operators
+ */
+export const checkBudgets = (expensesByCategory) => {
+  const budgets = loadBudgets();
+  const alerts = [];
+
+  for (const category in budgets) {
+    const limit = budgets[category];
+    const spent = expensesByCategory[category] || 0;
+    const percent = limit > 0 ? Math.round((spent / limit) * 100) : 0;
+    const exceeded = spent > limit;
+
+    alerts.push({ category, spent, limit, percent, exceeded });
+  }
+
+  // Sort: exceeded first, then by percent descending
+  alerts.sort((a, b) => {
+    if (a.exceeded && !b.exceeded) return -1;
+    if (!a.exceeded && b.exceeded) return 1;
+    return b.percent - a.percent;
+  });
+
+  return alerts;
+};
+
+
+
+================================================================================
+
+File: financeflow\js\charts.js (starts at line 1933)
+
+/**
+ * charts.js
+ * Chart.js with Tableau 10 color palette
+ */
+
+let pieChart = null;
+let barChart = null;
+
+// Tableau 10 standard palette
+const TABLEAU_COLORS = [
+  '#4E79A7', '#F28E2B', '#E15759', '#76B7B2', '#59A14F',
+  '#EDC948', '#B07AA1', '#FF9DA7', '#9C755F', '#BAB0AC'
+];
+
+const TABLEAU_INCOME = '#59A14F';
+const TABLEAU_EXPENSE = '#E15759';
+
+/** Get chart text/grid colors based on current theme */
+const getChartTheme = () => {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  return {
+    text: isDark ? '#94A3B8' : '#64748B',
+    grid: isDark ? '#2D3748' : '#E2E8F0',
+    tooltipBg: isDark ? '#1C2430' : '#FFFFFF'
+  };
+};
+
+/** Initialize or update pie chart (expenses by category) */
+export const updatePieChart = (categoryData) => {
+  const canvas = document.getElementById('pieChart');
+  const labels = Object.keys(categoryData);
+  const values = Object.values(categoryData);
+  const theme = getChartTheme();
+
+  if (pieChart) pieChart.destroy();
+
+  pieChart = new Chart(canvas, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: TABLEAU_COLORS.slice(0, labels.length),
+        borderWidth: 2,
+        borderColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#1C2430' : '#FFFFFF'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '55%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { color: theme.text, padding: 14, font: { family: 'Inter', size: 12 } }
+        }
+      }
+    }
+  });
+};
+
+/** Initialize or update bar chart (income vs expense) – Tableau style */
+export const updateBarChart = (income, expenses) => {
+  const canvas = document.getElementById('barChart');
+  const theme = getChartTheme();
+
+  if (barChart) barChart.destroy();
+
+  barChart = new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: ['Income', 'Expenses'],
+      datasets: [{
+        label: 'Amount (₹)',
+        data: [income, expenses],
+        backgroundColor: [TABLEAU_INCOME, TABLEAU_EXPENSE],
+        hoverBackgroundColor: ['#4A8E42', '#C94547'],
+        borderRadius: { topLeft: 4, topRight: 4 },
+        borderSkipped: false,
+        barThickness: 48
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: { padding: { top: 28, right: 16, bottom: 4, left: 8 } },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: theme.tooltipBg,
+          titleColor: theme.text,
+          bodyColor: theme.text,
+          borderColor: theme.grid,
+          borderWidth: 1,
+          padding: 10,
+          callbacks: {
+            label: ctx => ` ₹${ctx.parsed.y.toFixed(2)}`
+          }
+        },
+        // Value labels drawn on top of bars
+        datalabels: false
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          border: { display: false, dash: [4, 4] },
+          ticks: {
+            color: theme.text,
+            font: { family: 'Inter', size: 11 },
+            maxTicksLimit: 5,
+            callback: val => `₹${val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val}`
+          },
+          grid: {
+            color: theme.grid,
+            lineWidth: 1
+          }
+        },
+        x: {
+          border: { display: false },
+          ticks: {
+            color: theme.text,
+            font: { family: 'Plus Jakarta Sans', size: 12, weight: '600' }
+          },
+          grid: { display: false }
+        }
+      },
+      animation: {
+        onComplete(ctx) {
+          // Draw value labels on top of bars after animation
+          const chart = ctx.chart;
+          const { ctx: c, data } = chart;
+          c.save();
+          c.font = `600 12px 'Plus Jakarta Sans', Inter, sans-serif`;
+          c.textAlign = 'center';
+          c.textBaseline = 'bottom';
+          data.datasets.forEach((dataset, i) => {
+            const meta = chart.getDatasetMeta(i);
+            meta.data.forEach((bar, index) => {
+              const val = dataset.data[index];
+              if (val === 0) return;
+              const label = `₹${val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val.toFixed(0)}`;
+              c.fillStyle = theme.text;
+              c.fillText(label, bar.x, bar.y - 6);
+            });
+          });
+          c.restore();
+        }
+      }
+    }
+  });
+};
+
+/** Update both charts */
+export const updateCharts = (stats, categoryData) => {
+  updatePieChart(categoryData);
+  updateBarChart(stats.income, stats.expenses);
+};
+
+
+
+================================================================================
+
+File: financeflow\js\storage.js (starts at line 2091)
+
+/**
+ * storage.js
+ * Local Storage operations with JSON
+ * Demonstrates: JSON, Local Storage, try-catch, Error Handling
+ */
+
+const STORAGE_KEY = 'financeflow_transactions';
+const THEME_KEY = 'financeflow_theme';
+
+/** Save transactions array to localStorage */
+export const saveTransactions = (transactions) => {
+  try {
+    const jsonData = JSON.stringify(transactions); // JSON serialization
+    localStorage.setItem(STORAGE_KEY, jsonData);
+    return true;
+  } catch (error) {
+    console.error('Failed to save:', error.message);
+    return false;
+  }
+};
+
+/** Load transactions from localStorage */
+export const loadTransactions = () => {
+  try {
+    const jsonData = localStorage.getItem(STORAGE_KEY);
+    if (!jsonData) return [];
+    return JSON.parse(jsonData); // JSON parsing
+  } catch (error) {
+    console.error('Failed to load:', error.message);
+    return [];
+  }
+};
+
+/** Save theme preference */
+export const saveTheme = (theme) => {
+  localStorage.setItem(THEME_KEY, theme);
+};
+
+/** Load theme preference */
+export const loadTheme = () => {
+  return localStorage.getItem(THEME_KEY) || 'light';
+};
+
+
+
+================================================================================
+
+File: financeflow\js\transaction.js (starts at line 2134)
+
+/**
+ * transaction.js
+ * Business logic: validation, CRUD, calculations
+ * Demonstrates: Functions, Arrow Functions, Arrays, if-else, Array Methods
+ */
+
+import { Transaction, TYPES, CATEGORIES } from './transactionClass.js';
+
+let transactions = []; // Array to hold all transactions
+
+/** Get all transactions */
+export const getTransactions = () => transactions;
+
+/** Set transactions (used when loading from storage) */
+export const setTransactions = (data) => {
+  transactions = data.map(obj => Transaction.fromJSON(obj));
+};
+
+/** Validate form fields – returns error message or empty string */
+export const validateTransaction = (title, amount, category, type, date) => {
+  if (!title || title.trim() === '') return 'Title is required.';
+  if (!amount || parseFloat(amount) <= 0) return 'Amount must be greater than zero.';
+  if (!category) return 'Please select a category.';
+  if (!type) return 'Please select a type.';
+  if (!date) return 'Date is required.';
+  return '';
+};
+
+/** Add a new transaction */
+export const addTransaction = (title, amount, category, type, date) => {
+  const error = validateTransaction(title, amount, category, type, date);
+  if (error) return { success: false, error };
+
+  const tx = new Transaction(title, amount, category, type, date);
+  transactions.push(tx);
+  return { success: true, transaction: tx };
+};
+
+/** Update existing transaction by ID */
+export const updateTransaction = (id, title, amount, category, type, date) => {
+  const error = validateTransaction(title, amount, category, type, date);
+  if (error) return { success: false, error };
+
+  const index = transactions.findIndex(tx => tx.id === id); // find method
+  if (index === -1) return { success: false, error: 'Transaction not found.' };
+
+  transactions[index] = new Transaction(title, amount, category, type, date, id);
+  return { success: true };
+};
+
+/** Delete transaction by ID */
+export const deleteTransaction = (id) => {
+  transactions = transactions.filter(tx => tx.id !== id); // filter method
+};
+
+/** Get transaction by ID */
+export const getTransactionById = (id) => transactions.find(tx => tx.id === id);
+
+/**
+ * Get the Monday of the current week (ISO week)
+ * Demonstrates: Date object, arithmetic operators
+ */
+const getWeekStart = () => {
+  const now = new Date();
+  const day = now.getDay(); // 0 = Sun, 1 = Mon ...
+  const diff = (day === 0 ? -6 : 1 - day); // adjust to Monday
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + diff);
+  monday.setHours(0, 0, 0, 0);
+  return monday;
+};
+
+/**
+ * Get the first day of the current month
+ * Demonstrates: Date object, setDate
+ */
+const getMonthStart = () => {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), 1);
+};
+
+/** Filter & search transactions */
+export const filterTransactions = (search = '', typeFilter = 'all', dateFrom = '', dateTo = '', period = 'all') => {
+  let result = [...transactions];
+
+  // --- Period filter (this week / this month) ---
+  if (period === 'week') {
+    const weekStart = getWeekStart();
+    result = result.filter(tx => new Date(tx.date) >= weekStart);
+  } else if (period === 'month') {
+    const monthStart = getMonthStart();
+    result = result.filter(tx => new Date(tx.date) >= monthStart);
+  }
+
+  // --- Date range filter using Date object comparisons ---
+  if (dateFrom) {
+    const from = new Date(dateFrom);
+    result = result.filter(tx => new Date(tx.date) >= from);
+  }
+  if (dateTo) {
+    const to = new Date(dateTo);
+    result = result.filter(tx => new Date(tx.date) <= to);
+  }
+
+  // Filter by type using if-else
+  if (typeFilter === TYPES.INCOME) {
+    result = result.filter(tx => tx.type === TYPES.INCOME);
+  } else if (typeFilter === TYPES.EXPENSE) {
+    result = result.filter(tx => tx.type === TYPES.EXPENSE);
+  }
+
+  // Search by title or category
+  if (search.trim()) {
+    const term = search.toLowerCase();
+    result = result.filter(tx =>
+      tx.title.toLowerCase().includes(term) ||
+      tx.category.toLowerCase().includes(term)
+    );
+  }
+
+  // Sort by date (newest first) using Date object
+  result.sort((a, b) => new Date(b.date) - new Date(a.date));
+  return result;
+};
+
+/** Calculate dashboard stats using reduce */
+export const calculateStats = () => {
+  const income = transactions
+    .filter(tx => tx.type === TYPES.INCOME)
+    .reduce((sum, tx) => sum + tx.amount, 0);
+
+  const expenses = transactions
+    .filter(tx => tx.type === TYPES.EXPENSE)
+    .reduce((sum, tx) => sum + tx.amount, 0);
+
+  const balance = income - expenses;
+  const savings = balance > 0 ? balance : 0;
+
+  return { income, expenses, balance, savings };
+};
+
+/** Get expense totals grouped by category (for pie chart) */
+export const getExpensesByCategory = () => {
+  const expenseTxs = transactions.filter(tx => tx.type === TYPES.EXPENSE);
+  const grouped = {};
+
+  // Loop through expenses and group by category
+  for (let i = 0; i < expenseTxs.length; i++) {
+    const cat = expenseTxs[i].category;
+    grouped[cat] = (grouped[cat] || 0) + expenseTxs[i].amount;
+  }
+  return grouped;
+};
+
+export { CATEGORIES, TYPES };
+
+
+
+================================================================================
+
+File: financeflow\js\transactionClass.js (starts at line 2290)
+
+/**
+ * transactionClass.js
+ * ES6 Class demonstrating: Classes, Constructors, Methods, Objects
+ */
+
+// Constants for transaction types
+export const TYPES = { INCOME: 'income', EXPENSE: 'expense' };
+
+// Array of available categories
+export const CATEGORIES = [
+  'Salary', 'Freelance', 'Food', 'Shopping', 'Travel',
+  'Bills', 'Entertainment', 'Health', 'Education', 'Other'
+];
+
+/**
+ * Transaction class – each transaction is an object instance
+ */
+export class Transaction {
+  constructor(title, amount, category, type, date, id = null) {
+    this.id = id || Date.now().toString(); // unique ID using Date
+    this.title = title;
+    this.amount = parseFloat(amount);
+    this.category = category;
+    this.type = type;
+    this.date = date;
+  }
+
+  // Method: format amount with currency symbol
+  formatAmount() {
+    const prefix = this.type === TYPES.INCOME ? '+' : '-';
+    return `${prefix}₹${this.amount.toFixed(2)}`;
+  }
+
+  // Method: convert instance to plain object for JSON storage
+  toJSON() {
+    return {
+      id: this.id,
+      title: this.title,
+      amount: this.amount,
+      category: this.category,
+      type: this.type,
+      date: this.date
+    };
+  }
+
+  // Static method: create Transaction from stored object
+  static fromJSON(obj) {
+    return new Transaction(obj.title, obj.amount, obj.category, obj.type, obj.date, obj.id);
+  }
+}
+
+
+
+================================================================================
+
+File: financeflow\js\ui.js (starts at line 2341)
+
+/**
+ * ui.js
+ * DOM manipulation and UI updates
+ * Demonstrates: DOM Manipulation, Event Listeners, Template Literals
+ */
+
+import { CATEGORIES, TYPES } from './transaction.js';
+
+// DOM element references
+const els = {};
+
+/** Build a progress bar color based on percent */
+const budgetBarColor = (percent, exceeded) => {
+  if (exceeded) return 'var(--expense)';
+  if (percent >= 80) return '#F28E2B'; // Tableau orange – warning
+  return 'var(--income)';
+};
+
+/** Cache all DOM elements on init */
+export const initElements = () => {
+  els.form = document.getElementById('transactionForm');
+  els.editId = document.getElementById('editId');
+  els.title = document.getElementById('title');
+  els.amount = document.getElementById('amount');
+  els.category = document.getElementById('category');
+  els.type = document.getElementById('type');
+  els.date = document.getElementById('date');
+  els.formError = document.getElementById('formError');
+  els.submitBtn = document.getElementById('submitBtn');
+  els.list = document.getElementById('transactionList');
+  els.emptyMsg = document.getElementById('emptyMsg');
+  els.searchInput = document.getElementById('searchInput');
+  els.filterType = document.getElementById('filterType');
+  els.filterPeriod = document.getElementById('filterPeriod');
+  els.dateFrom = document.getElementById('dateFrom');
+  els.dateTo = document.getElementById('dateTo');
+  els.totalBalance = document.getElementById('totalBalance');
+  els.totalIncome = document.getElementById('totalIncome');
+  els.totalExpenses = document.getElementById('totalExpenses');
+  els.totalSavings = document.getElementById('totalSavings');
+  els.deleteModal = document.getElementById('deleteModal');
+  els.confirmDelete = document.getElementById('confirmDelete');
+  els.cancelDelete = document.getElementById('cancelDelete');
+  els.toast = document.getElementById('toast');
+  els.themeToggle = document.getElementById('themeToggle');
+  els.budgetList = document.getElementById('budgetList');
+  els.budgetCategory = document.getElementById('budgetCategory');
+  els.budgetAmount = document.getElementById('budgetAmount');
+  els.budgetForm = document.getElementById('budgetForm');
+};
+
+/** Populate category dropdown */
+export const populateCategories = () => {
+  const options = CATEGORIES
+    .map(cat => `<option value="${cat}">${cat}</option>`)
+    .join('');
+  els.category.innerHTML = options;
+  if (els.budgetCategory) els.budgetCategory.innerHTML = options;
+};
+
+/** Set default date to today */
+export const setDefaultDate = () => {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  els.date.value = `${yyyy}-${mm}-${dd}`;
+};
+
+/** Update dashboard stat cards */
+export const updateStats = (stats) => {
+  els.totalBalance.textContent = `₹${stats.balance.toFixed(2)}`;
+  els.totalIncome.textContent = `₹${stats.income.toFixed(2)}`;
+  els.totalExpenses.textContent = `₹${stats.expenses.toFixed(2)}`;
+  els.totalSavings.textContent = `₹${stats.savings.toFixed(2)}`;
+};
+
+/** Render transaction list */
+export const renderTransactions = (transactions, onEdit, onDelete) => {
+  els.list.innerHTML = '';
+
+  if (transactions.length === 0) {
+    els.emptyMsg.style.display = 'block';
+    return;
+  }
+  els.emptyMsg.style.display = 'none';
+
+  transactions.forEach(tx => {
+    const li = document.createElement('li');
+    const sign = tx.type === TYPES.INCOME ? '+' : '-';
+    li.innerHTML = `
+      <span class="tx-type-dot ${tx.type}"></span>
+      <div class="tx-info">
+        <p class="tx-title">${tx.title}</p>
+        <p class="tx-meta">${tx.category} · ${tx.date}</p>
+      </div>
+      <span class="tx-amount ${tx.type}">${sign}₹${tx.amount.toFixed(2)}</span>
+      <div class="tx-actions">
+        <button class="btn btn-icon edit-btn" data-id="${tx.id}" aria-label="Edit">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </button>
+        <button class="btn btn-icon btn-danger-icon delete-btn" data-id="${tx.id}" aria-label="Delete">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          </svg>
+        </button>
+      </div>
+    `;
+    els.list.appendChild(li);
+  });
+
+  // Event listeners for edit/delete buttons
+  els.list.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => onEdit(btn.dataset.id));
+  });
+  els.list.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', () => onDelete(btn.dataset.id));
+  });
+};
+
+/** Fill form for editing */
+export const fillEditForm = (tx) => {
+  els.editId.value = tx.id;
+  els.title.value = tx.title;
+  els.amount.value = tx.amount;
+  els.category.value = tx.category;
+  els.type.value = tx.type;
+  els.date.value = tx.date;
+  els.submitBtn.textContent = 'Update Transaction';
+};
+
+/** Reset form to add mode */
+export const resetForm = () => {
+  els.form.reset();
+  els.editId.value = '';
+  els.submitBtn.textContent = 'Add Transaction';
+  els.formError.textContent = '';
+  setDefaultDate();
+};
+
+/** Show form validation error */
+export const showFormError = (msg) => { els.formError.textContent = msg; };
+
+/** Show/hide delete modal */
+export const showDeleteModal = (show) => {
+  els.deleteModal.classList.toggle('hidden', !show);
+};
+
+/** Show toast notification */
+export const showToast = (message) => {
+  els.toast.textContent = message;
+  els.toast.classList.remove('hidden');
+  setTimeout(() => els.toast.classList.add('hidden'), 2500);
+};
+
+/** Toggle dark/light theme */
+export const applyTheme = (theme) => {
+  document.documentElement.setAttribute('data-theme', theme);
+};
+
+/** Get form values */
+export const getFormData = () => ({
+  id: els.editId.value,
+  title: els.title.value,
+  amount: els.amount.value,
+  category: els.category.value,
+  type: els.type.value,
+  date: els.date.value
+});
+
+/** Render budget alerts/progress bars
+ *  alerts = array from checkBudgets()
+ *  onRemove = callback(category)
+ */
+export const renderBudgets = (alerts, budgets, onRemove) => {
+  if (!els.budgetList) return;
+  if (alerts.length === 0) {
+    els.budgetList.innerHTML = '<p class="empty-msg" style="padding:1rem 0">No budgets set. Add one above.</p>';
+    return;
+  }
+  els.budgetList.innerHTML = alerts.map(({ category, spent, limit, percent, exceeded }) => {
+    const clampedPct = Math.min(percent, 100);
+    const barColor = budgetBarColor(percent, exceeded);
+    const statusLabel = exceeded
+      ? `<span class="budget-exceeded">Over by ₹${(spent - limit).toFixed(2)}</span>`
+      : `<span class="budget-ok">₹${(limit - spent).toFixed(2)} left</span>`;
+    return `
+      <div class="budget-item${exceeded ? ' budget-item--exceeded' : ''}">
+        <div class="budget-item-header">
+          <span class="budget-cat">${category}</span>
+          <div class="budget-meta">
+            ${statusLabel}
+            <button class="btn btn-icon btn-danger-icon btn-sm remove-budget-btn" data-cat="${category}" aria-label="Remove budget">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M18 6 6 18M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="budget-bar-track">
+          <div class="budget-bar-fill" style="width:${clampedPct}%; background:${barColor}"></div>
+        </div>
+        <div class="budget-amounts">
+          <span>₹${spent.toFixed(2)} spent</span>
+          <span>${percent}% of ₹${limit.toFixed(2)}</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  els.budgetList.querySelectorAll('.remove-budget-btn').forEach(btn => {
+    btn.addEventListener('click', () => onRemove(btn.dataset.cat));
+  });
+};
+
+export { els };
+
+
+
+================================================================================

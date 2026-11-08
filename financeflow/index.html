@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinanceFlow – Personal Finance Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <svg class="icon icon-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+          <rect x="2" y="5" width="20" height="14" rx="2"/>
+          <path d="M2 10h20"/>
+          <path d="M6 15h4"/>
+        </svg>
+        <div>
+          <h1>FinanceFlow</h1>
+          <p class="tagline">Your personal finance overview</p>
+        </div>
+      </div>
+      <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">
+        <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        </svg>
+        <svg class="icon icon-moon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Dashboard Stats -->
+    <section class="stats-grid" id="statsGrid">
+      <div class="stat-card" data-stat="balance">
+        <div class="stat-icon-wrap">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Total Balance</p>
+          <p class="stat-value" id="totalBalance">₹0</p>
+        </div>
+      </div>
+      <div class="stat-card income" data-stat="income">
+        <div class="stat-icon-wrap">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Total Income</p>
+          <p class="stat-value" id="totalIncome">₹0</p>
+        </div>
+      </div>
+      <div class="stat-card expense" data-stat="expense">
+        <div class="stat-icon-wrap">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M12 5v14M19 12l-7 7-7-7"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Total Expenses</p>
+          <p class="stat-value" id="totalExpenses">₹0</p>
+        </div>
+      </div>
+      <div class="stat-card savings" data-stat="savings">
+        <div class="stat-icon-wrap">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c-.2-1.5-1.5-3-3-3z"/>
+            <circle cx="15" cy="9" r="1"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Savings</p>
+          <p class="stat-value" id="totalSavings">₹0</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-grid">
+      <!-- Add Transaction Form -->
+      <section class="card form-card">
+        <div class="card-header">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          <h2>Add Transaction</h2>
+        </div>
+        <form id="transactionForm">
+          <input type="hidden" id="editId">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" placeholder="Enter Ttle">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="amount">Amount (₹)</label>
+              <input type="number" id="amount" placeholder="0" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <label for="date">Date</label>
+              <input type="date" id="date">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="category">Category</label>
+              <select id="category"></select>
+            </div>
+            <div class="form-group">
+              <label for="type">Type</label>
+              <select id="type">
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select>
+            </div>
+          </div>
+          <p class="error-msg" id="formError"></p>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Add Transaction</button>
+        </form>
+      </section>
+
+      <!-- Transaction List -->
+      <section class="card list-card">
+        <div class="list-header">
+          <div class="card-header">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+              <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+            </svg>
+            <h2>Transactions</h2>
+          </div>
+          <div class="list-controls">
+            <div class="search-wrap">
+              <svg class="icon icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+              <input type="search" id="searchInput" placeholder="Search transactions">
+            </div>
+            <select id="filterType">
+              <option value="all">All Types</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+            <select id="filterPeriod">
+              <option value="all">All Time</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+            </select>
+          </div>
+          <div class="date-range-controls">
+            <label for="dateFrom">From</label>
+            <input type="date" id="dateFrom" title="Start date">
+            <label for="dateTo">To</label>
+            <input type="date" id="dateTo" title="End date">
+          </div>
+        </div>
+        <ul id="transactionList" class="transaction-list"></ul>
+        <p id="emptyMsg" class="empty-msg">No transactions yet. Add your first one above.</p>
+      </section>
+
+      <!-- Analytics -->
+      <section class="card charts-card">
+        <div class="card-header">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M18 20V10M12 20V4M6 20v-6"/>
+          </svg>
+          <h2>Analytics</h2>
+        </div>
+        <div class="charts-grid">
+          <div class="chart-wrap">
+            <h3>Expenses by Category</h3>
+            <canvas id="pieChart"></canvas>
+          </div>
+          <div class="chart-wrap">
+            <h3>Income vs Expense</h3>
+            <canvas id="barChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Budget Limits -->
+      <section class="card budget-card">
+        <div class="card-header">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+          <h2>Budget Limits</h2>
+        </div>
+        <form id="budgetForm" class="budget-form">
+          <select id="budgetCategory"></select>
+          <div class="budget-input-wrap">
+            <span class="budget-currency">₹</span>
+            <input type="number" id="budgetAmount" placeholder="Set limit" min="1" step="0.01">
+          </div>
+          <button type="submit" class="btn btn-primary btn-sm">Set</button>
+        </form>
+        <div id="budgetList" class="budget-list"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <!-- <p>FinanceFlow &mdash; Built with HTML, CSS &amp; JavaScript</p> -->
+    </footer>
+  </div>
+
+  <!-- Delete Modal -->
+  <div id="deleteModal" class="modal hidden">
+    <div class="modal-content">
+      <svg class="icon icon-modal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+        <path d="M10 11v6M14 11v6"/>
+      </svg>
+      <h3>Delete Transaction?</h3>
+      <p>This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button id="cancelDelete" class="btn btn-secondary">Cancel</button>
+        <button id="confirmDelete" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
